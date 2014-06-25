@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+	<title>Sistema Datos Viales</title>
+	<link rel="stylesheet" type="text/css" href="bts/css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <meta charset="UTF-8">
+</head>
+<body>
+    <div class="container">
+      <div class="page-header">
+          <div class="row">
+            <div class="col-md-4 col-lg-4">
+                <img src="img/SCT_logo.png" width="185" class="img-responsive" alt="Responsive image">
+            </div>
+            <div class="col-md-4 col-lg-4">
+              <h4 align="center">SISTEMA DATOS VIALES</h4>
+            </div>
+            <div class="col-md-4 col-lg-4">
+                <img src="img/semic_logo.png" align="right" width="185" class="img-responsive" alt="Responsive image">
+            </div>
+          </div>
+        </div>
+      <div class="row">
+        <p id="fecha" align="right"></p>
+      </div>
+      <div class="row">
+         <div class="col-md-8 col-lg-8">
+          <p> <img src="img/sctdv.jpg" width="450"></p>
+        </div>
+        <div class="login col-md-4 col-lg-4">
+        <H4 align="left">Iniciar sesion: </H4>
+          <form  role="form" name="formLogin" id="formLogin" action="autentificacion.php"  method="post">
+            <div class="form-group">
+              <input type="usuario"name="usuario" id="usuario" class="form-control"  placeholder="Usuario">
+            </div>
+            <div class="form-group">
+              <input type="password" name="contrasenya" id="contrasenya" class="form-control"  placeholder="Password">
+            </div>
+              <input name="Login" type="submit" class="btn btn-inverse span4" id="login"  value="Login" />
+            <div id="respuestaAuto"></div>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p align="center" >Datos Viales Sistema Experimental desarrollado por SEMIC <br>Los datos que se presentan en este desarrollo se han tomado de la página de SCT</p>
+      </div>
+    </div> <!-- /container -->
+
+<script type="text/javascript">
+
+  var meses = new Array ("Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre");
+  var diasSemana = new Array("Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado");
+  var f=new Date();
+    $('#fecha').text(diasSemana[f.getDay()] + ", " + f.getDate() + " de " + meses[f.getMonth()] + " de " + f.getFullYear());
+
+ $("#login").click(function() {    
+        var action = $("#formLogin").attr('action');
+        var form_data = {
+            username: $("#usuario").val(),
+            password: $("#contrasenya").val(),
+        };
+        
+        $.ajax({
+            type: "POST",
+            url: action,
+            data: form_data,
+            success: function(response)
+            {
+                if(response == 'success'){
+                    $("#formLogin").slideUp("fast", function() {
+                        $("#respuestaAuto").html("<div class='alert alert-success'> Entrando al sistema.</div>");
+                            $('#respuestaAuto').show(); 
+                            $('#respuestaAuto').delay(1000).hide(250);  
+                              var pagina="principal.php?tiempo=2010";
+                              setTimeout(function(){location.href=pagina},100);   
+                     });
+               }else{
+                   $("#respuestaAuto").html("<div class='alert alert-danger'>Usuario y/o Contraseña incorrecta, verifique...</div>");  
+                            $('#respuestaAuto').show();
+                            $('#respuestaAuto').delay(1000).hide(250);    
+                }
+            }
+        }); 
+        return false;
+    });
+</script>
+
+</body>
+</html>
